@@ -1,0 +1,118 @@
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    private Rigidbody _playerRb;
+    private InputSystem_Actions _controls;
+    private Vector2 _moveInput;
+
+    // Encapsulation:
+    // Backing fields are kept private to protect internal state from unauthorized external manipulation.
+    // Public properties provide controlled access with setter validation to prevent game-breaking values.
+
+    [Header("Movement Settings")]
+    [SerializeField] private float _moveSpeed = 12.0f;
+    public float MoveSpeed
+    {
+        get { return _moveSpeed; }
+        set {_moveSpeed = Mathf.Max(0f, value);}
+    }
+
+    [Header("Shooting Settings")]
+    [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private Transform _firePoint;
+    [SerializeField] private float _bulletSpeed = 500.0f;
+    [SerializeField] private float _fireRate = 1.0f;
+    public float FireRate
+    {
+        get { return _fireRate; }
+        set{_fireRate = Mathf.Max(0.05f, value);}
+    }
+    private float _nextFireTime;
+
+    private void Awake()
+    {
+        _controls = new InputSystem_Actions();
+        _playerRb = GetComponent<Rigidbody>();
+    }
+
+    private void OnEnable()
+    {
+        _controls.Player.Enable();
+    }
+    private void OnDisable()
+    {
+        _controls.Player.Disable();
+    }
+
+    // Abstraction:
+    // Update() acts as a high-level coordinator. It reads input and delegates action to specialized methods,
+    // hiding the low-level implementation details of physics translation and object instantiation.
+
+    private void Update()
+    {
+        _moveInput = _controls.Player.Move.ReadValue<Vector2>();
+        if (_controls.Player.Shoot.WasPressedThisFrame() && Time.time >= _nextFireTime)
+        {
+            Shoot();
+        }
+    }
+
+    // Abstraction:
+    //Simple call hides vector normalization, frame timing, and boundary clamping.
+    
+    private void FixedUpdate()
+    {
+        Move();
+        //ConstrainPlayerPos();
+    }
+
+    private void Move()
+    {
+        // Movement Using AddForce
+
+        //float horizontalInput = _moveInput.x;
+        //float verticalInput = _moveInput.y;
+        //_playerRb.AddForce(new Vector3(horizontalInput, 0, verticalInput) * _moveSpeed);
+
+        //Movement Using MovePosition
+
+        Vector3 direction = new Vector3(_moveInput.x, 0, _moveInput.y).normalized;
+        Vector3 targetPosition = _playerRb.position + direction *(_moveSpeed * Time.fixedDeltaTime);
+
+        targetPosition.x = Mathf.Clamp(targetPosition.x, -18 , 18);
+        targetPosition.z = Mathf.Clamp(targetPosition.z, -10, 10);
+
+        _playerRb.MovePosition(targetPosition);
+    }
+
+
+    private void Shoot()
+    {
+        _nextFireTime = Time.time + _fireRate;
+        Quaternion bulletRotation = _firePoint.rotation * Quaternion.Euler(90, 0, 0);
+        GameObject bulletInstance = Instantiate(_bulletPrefab, _firePoint.position, bulletRotation);
+        if (bulletInstance.TryGetComponent<Rigidbody>(out Rigidbody bulletRb))
+        {
+            bulletRb.AddForce(_firePoint.forward * _bulletSpeed);
+        }
+    }
+
+
+    //Use ConstrainPlayerPos() method only if moving the player using AddForce.
+    //private void ConstrainPlayerPos()
+    //{
+
+    //    Vector3 currentPos = transform.position;
+    //    if (Mathf.Abs(currentPos.x) > 18)
+    //    {
+    //        transform.position = new Vector3(Mathf.Sign(currentPos.x) * 18, currentPos.y, currentPos.z);
+    //        _playerRb.linearVelocity = new Vector3(0, _playerRb.linearVelocity.y, _playerRb.linearVelocity.z);
+    //    }
+    //    if (Mathf.Abs(currentPos.z) > 10)
+    //    {
+    //        transform.position = new Vector3(currentPos.x, currentPos.y, Mathf.Sign(currentPos.z) * 10);
+    //        _playerRb.linearVelocity = new Vector3(_playerRb.linearVelocity.x, _playerRb.linearVelocity.y, 0);
+    //    }
+    //}
+}
