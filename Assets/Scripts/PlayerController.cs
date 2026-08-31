@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -30,6 +31,14 @@ public class PlayerController : MonoBehaviour
     }
     private float _nextFireTime;
 
+    private void Start()
+    {
+        if (MainManager.Instance != null)
+        {
+            SetColor(MainManager.Instance.ChosenColor);
+        }
+    }
+
     private void Awake()
     {
         _controls = new InputSystem_Actions();
@@ -56,6 +65,11 @@ public class PlayerController : MonoBehaviour
         {
             Shoot();
         }
+
+        if(_controls.Player.Quit.WasPressedThisFrame())
+        {
+            MainManager.Instance.ReturnToMenu();
+        }
     }
 
     // Abstraction:
@@ -65,6 +79,15 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         //ConstrainPlayerPos();
+    }
+
+    private void SetColor(Color color)
+    {
+        if (TryGetComponent<Renderer>(out Renderer playerRenderer))
+        {
+            // Applies chosen color to the player sphere material instance
+            playerRenderer.material.color = color;
+        }
     }
 
     private void Move()

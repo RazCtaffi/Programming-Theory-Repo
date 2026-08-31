@@ -70,7 +70,7 @@
                     "name": "Previous",
                     "type": "Button",
                     "id": "2776c80d-3c14-4091-8c56-d04ced07a2b0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false,
@@ -100,6 +100,16 @@
                     "name": "Shoot",
                     "type": "Button",
                     "id": "2f7ff17a-2778-4c4e-9a09-f5f1a1275e8b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Quit",
+                    "type": "Button",
+                    "id": "44e7043f-b984-4aa7-8acb-0c46cdf74c14",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -501,6 +511,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b497c77a-8628-4a7d-b3bb-58148fdc8909",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Quit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
