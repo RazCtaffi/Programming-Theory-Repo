@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
             Shoot();
         }
 
-        if(_controls.Player.Quit.WasPressedThisFrame())
+        if(_controls.Player.Quit.WasPressedThisFrame() && MainManager.Instance != null)
         {
             MainManager.Instance.ReturnToMenu();
         }
