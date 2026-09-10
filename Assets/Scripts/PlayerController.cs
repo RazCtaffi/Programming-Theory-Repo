@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform _firePoint;
     [SerializeField] private float _bulletSpeed = 500.0f;
     [SerializeField] private float _fireRate = 1.0f;
+    public bool IsSpreadShotActive { get; set; } = false;
+    public float ActiveSpreadAngle { get; set; } = 0f;
     public float FireRate
     {
         get { return _fireRate; }
@@ -113,11 +115,30 @@ public class PlayerController : MonoBehaviour
     private void Shoot()
     {
         _nextFireTime = Time.time + _fireRate;
-        Quaternion bulletRotation = _firePoint.rotation * Quaternion.Euler(90, 0, 0);
-        GameObject bulletInstance = Instantiate(_bulletPrefab, _firePoint.position, bulletRotation);
+        if (IsSpreadShotActive)
+        {
+            FireBullet(0f);
+            FireBullet(-ActiveSpreadAngle);
+            FireBullet(ActiveSpreadAngle);
+        }
+        else
+        {
+            FireBullet(0f);
+        }
+    }
+
+    private void FireBullet(float yAngleOffset)
+    {
+        Quaternion spreadRotation = Quaternion.Euler(0, yAngleOffset, 0);
+
+        Quaternion finalRotation = _firePoint.rotation * spreadRotation * Quaternion.Euler(90, 0, 0);
+
+        GameObject bulletInstance = Instantiate(_bulletPrefab, _firePoint.position, finalRotation);
+        
         if (bulletInstance.TryGetComponent<Rigidbody>(out Rigidbody bulletRb))
         {
-            bulletRb.AddForce(_firePoint.forward * _bulletSpeed);
+            Vector3 shootDirection = (_firePoint.rotation * spreadRotation) * Vector3.forward;
+            bulletRb.AddForce(shootDirection * _bulletSpeed);
         }
     }
 
