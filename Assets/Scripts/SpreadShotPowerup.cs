@@ -13,7 +13,7 @@ public class SpreadShotPowerup : Powerup
     private float SpreadAngle
     {
         get { return _spreadAngle; }
-        set { _spreadAngle = Math.Clamp(value, 20.0f, 60.0f); }
+        set { _spreadAngle = Mathf.Clamp(value, 20.0f, 60.0f); }
     }
 
     private void OnValidate()
