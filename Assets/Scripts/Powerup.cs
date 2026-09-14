@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Powerup : MonoBehaviour
@@ -7,16 +8,24 @@ public class Powerup : MonoBehaviour
     [SerializeField] private float _rotationSpeed = 100f;
     
     [Header("Settings")]
-    [SerializeField] private float _duration = 5f;
+    [SerializeField] private float _effectDuration = 5f;
+    [SerializeField] private float _despawnTime = 5f;
+
     public float Duration 
     {
-        get { return _duration; }
-        set { _duration = Mathf.Max(0f, value); }
+        get { return _effectDuration; }
+        set { _effectDuration = Mathf.Max(0f, value); }
     }
 
+    private Coroutine _despawnCoroutine;
     private Collider _powerupCollider;
     protected Renderer _powerupRenderer;
 
+
+    protected virtual void Start()
+    {
+        _despawnCoroutine = StartCoroutine(DespawnRoutine());
+    }
     private void Awake()
     {
         _powerupCollider = GetComponent<Collider>();
@@ -39,11 +48,23 @@ public class Powerup : MonoBehaviour
 
     private void Collect(PlayerController player)
     {
+        if (_despawnCoroutine != null)
+        {
+            StopCoroutine(_despawnCoroutine);
+        }
+
         if (_powerupCollider != null) _powerupCollider.enabled = false;
         if (_powerupRenderer != null) _powerupRenderer.enabled = false;
 
         StartCoroutine(PowerupRoutine(player));
     }
+
+    private IEnumerator DespawnRoutine()
+    {
+        yield return new WaitForSeconds(_despawnTime);
+        Destroy(gameObject);
+    }
+
     private IEnumerator PowerupRoutine(PlayerController player)
     {
         ApplyEffect(player);

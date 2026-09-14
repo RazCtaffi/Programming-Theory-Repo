@@ -12,26 +12,31 @@ public class PlayerController : MonoBehaviour
     // Public properties provide controlled access with setter validation to prevent game-breaking values.
 
     [Header("Movement Settings")]
-    [SerializeField] private float _moveSpeed = 12.0f;
-    public float MoveSpeed
+    [SerializeField] private float _baseSpeed = 12.0f;
+    private float _currentSpeed;
+    public float Speed
     {
-        get { return _moveSpeed; }
-        set {_moveSpeed = Mathf.Max(0f, value);}
+        get { return _currentSpeed; }
+        set { _currentSpeed = Mathf.Max(0f, value); }
     }
 
     [Header("Shooting Settings")]
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private float _bulletSpeed = 500.0f;
-    [SerializeField] private float _fireRate = 1.0f;
-    public bool IsSpreadShotActive { get; set; } = false;
-    public float ActiveSpreadAngle { get; set; } = 0f;
+    [SerializeField] private float _baseFireRate = 0.5f;
+    private float _currentFireRate;
     public float FireRate
     {
-        get { return _fireRate; }
-        set{_fireRate = Mathf.Max(0.05f, value);}
+        get { return _currentFireRate; }
+        set { _currentFireRate = Mathf.Max(0.05f, value); }
     }
+    public bool IsSpreadShotActive { get; private set; } = false;
+    public float ActiveSpreadAngle { get; private set; } = 0f;
     private float _nextFireTime;
+    private int _speedBoostCount = 0;
+    private int _rapidFireCount = 0;
+    private int _spreadShotCount = 0;
 
     private void Start()
     {
@@ -45,6 +50,8 @@ public class PlayerController : MonoBehaviour
     {
         _controls = new InputSystem_Actions();
         _playerRb = GetComponent<Rigidbody>();
+        _currentFireRate = _baseFireRate;
+        _currentSpeed = _baseSpeed;
     }
 
     private void OnEnable()
@@ -68,7 +75,7 @@ public class PlayerController : MonoBehaviour
             Shoot();
         }
 
-        if(_controls.Player.Quit.WasPressedThisFrame() && MainManager.Instance != null)
+        if (_controls.Player.Quit.WasPressedThisFrame() && MainManager.Instance != null)
         {
             MainManager.Instance.ReturnToMenu();
         }
@@ -76,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
     // Abstraction:
     //Simple call hides vector normalization, frame timing, and boundary clamping.
-    
+
     private void FixedUpdate()
     {
         Move();
@@ -103,9 +110,9 @@ public class PlayerController : MonoBehaviour
         //Movement Using MovePosition
 
         Vector3 direction = new Vector3(_moveInput.x, 0, _moveInput.y).normalized;
-        Vector3 targetPosition = _playerRb.position + direction *(_moveSpeed * Time.fixedDeltaTime);
+        Vector3 targetPosition = _playerRb.position + direction * (Speed * Time.fixedDeltaTime);
 
-        targetPosition.x = Mathf.Clamp(targetPosition.x, -18 , 18);
+        targetPosition.x = Mathf.Clamp(targetPosition.x, -18, 18);
         targetPosition.z = Mathf.Clamp(targetPosition.z, -10, 10);
 
         _playerRb.MovePosition(targetPosition);
@@ -114,7 +121,7 @@ public class PlayerController : MonoBehaviour
 
     private void Shoot()
     {
-        _nextFireTime = Time.time + _fireRate;
+        _nextFireTime = Time.time + FireRate;
         if (IsSpreadShotActive)
         {
             FireBullet(0f);
@@ -134,7 +141,7 @@ public class PlayerController : MonoBehaviour
         Quaternion finalRotation = _firePoint.rotation * spreadRotation * Quaternion.Euler(90, 0, 0);
 
         GameObject bulletInstance = Instantiate(_bulletPrefab, _firePoint.position, finalRotation);
-        
+
         if (bulletInstance.TryGetComponent<Rigidbody>(out Rigidbody bulletRb))
         {
             Vector3 shootDirection = (_firePoint.rotation * spreadRotation) * Vector3.forward;
@@ -142,6 +149,51 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ApplySpeedBoost(float boostAmount)
+    {
+        _speedBoostCount++;
+        _currentSpeed = _baseSpeed + boostAmount;
+    }
+
+    public void RemoveSpeedBoost()
+    {
+        _speedBoostCount = Mathf.Max(0, _speedBoostCount - 1);
+        if (_speedBoostCount == 0)
+        {
+            _currentSpeed = _baseSpeed;
+        }
+    }
+
+    public void ApplyRapidFire(float newFireRate)
+    {
+        _rapidFireCount++;
+        _currentFireRate = newFireRate;
+    }
+
+    public void RemoveRapidFire()
+    {
+        _rapidFireCount = Mathf.Max(0, _rapidFireCount - 1);
+        if( _rapidFireCount == 0)
+        {
+            _currentFireRate = _baseFireRate;
+        }
+    }
+
+    public void ApplySpreadShot(float angle)
+    {
+        _spreadShotCount++;
+        ActiveSpreadAngle = angle;
+        IsSpreadShotActive = true;
+    }
+
+    public void RemoveSpreadShot()
+    {
+        _spreadShotCount = Mathf.Max(0, _spreadShotCount - 1);
+        if (_spreadShotCount == 0)
+        {
+            IsSpreadShotActive = false;
+        }
+    }
 
     //Use ConstrainPlayerPos() method only if moving the player using AddForce.
     //private void ConstrainPlayerPos()

@@ -513,6 +513,13 @@ MonoBehaviour:
   - {fileID: 5403266738252186079, guid: 594d058213d908a4e804061c7d7e2aa7, type: 3}
   - {fileID: 3618923183221284800, guid: ccf9c75febfbd434e9464900e6ad10a1, type: 3}
   _enemyPrefabs: []
+  _powerupSpawnMin: 3
+  _powerupSpawnMax: 8
+  _enemySpawnDelay: 1
+  _spawnRangeX: 17
+  _spawnRangeZ: 9
+  _enemySpawnZ: 10
+  isGameActive: 1
 --- !u!4 &835693644
 Transform:
   m_ObjectHideFlags: 0
@@ -1025,11 +1032,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72083ddf7df991c49a33da5a0d0eef7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  _moveSpeed: 12
+  _baseSpeed: 12
   _bulletPrefab: {fileID: 1182988310977497891, guid: d42f1ecb24a520f41adc3b1d6e3fd0f0, type: 3}
   _firePoint: {fileID: 71674355}
   _bulletSpeed: 500
-  _fireRate: 1
+  _baseFireRate: 0.5
 --- !u!54 &1954711032
 Rigidbody:
   m_ObjectHideFlags: 0

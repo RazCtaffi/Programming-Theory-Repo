@@ -24,14 +24,13 @@ public class SpreadShotPowerup : Powerup
     //Polymorphism
     protected override void ApplyEffect(PlayerController player)
     {
-        player.ActiveSpreadAngle = SpreadAngle;
-        player.IsSpreadShotActive = true;
+        player.ApplySpreadShot(SpreadAngle);
         Debug.Log("Spread Shot Activated!");
     }
     //Polymorphism
     protected override void RemoveEffect(PlayerController player)
     {
-        player.IsSpreadShotActive = false;
+        player.RemoveSpreadShot();
         Debug.Log("Spread Shot Deactivated!");
     }
 }
