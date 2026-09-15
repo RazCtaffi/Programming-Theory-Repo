@@ -9,6 +9,13 @@ public class Enemy : MonoBehaviour
         get { return _moveSpeed; }
         set { _moveSpeed = Mathf.Max(0f, value); }
     }
+
+    [Header("Score Settings")]
+    [SerializeField] private int _scoreValue = 10;
+    protected virtual int ScoreValue
+    {
+        get { return _scoreValue; }
+    }
     protected Rigidbody rb;
 
     protected virtual void Awake()
@@ -46,6 +53,10 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Die()
     {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddScore(ScoreValue);
+        }
         Destroy(gameObject);
     }
 }

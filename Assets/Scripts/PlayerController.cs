@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     [Header("Shooting Settings")]
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _firePoint;
-    [SerializeField] private float _bulletSpeed = 500.0f;
+    [SerializeField] private float _bulletSpeed = 600.0f;
     [SerializeField] private float _baseFireRate = 0.5f;
     private float _currentFireRate;
     public float FireRate
@@ -45,7 +45,10 @@ public class PlayerController : MonoBehaviour
         {
             SetColor(MainManager.Instance.ChosenColor);
         }
-        _gameManager = GameManager.Instance;
+        if (GameManager.Instance != null)
+        {
+            _gameManager = GameManager.Instance;
+        }
     }
 
     private void Awake()
@@ -154,8 +157,9 @@ public class PlayerController : MonoBehaviour
     public void GameOver()
     {
         Destroy(gameObject);
-        _gameManager.isGameActive = false;
+        _gameManager.TriggerGameOver();
     }
+
     public void ApplySpeedBoost(float boostAmount)
     {
         _speedBoostCount++;

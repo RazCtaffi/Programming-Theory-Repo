@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,14 +13,18 @@ public class GameManager : MonoBehaviour
     [Header("Spawn Timing")]
     [SerializeField] private float _powerupSpawnMin = 3f;
     [SerializeField] private float _powerupSpawnMax = 8f;
-    [SerializeField] private float _enemySpawnDelay = 2f;
+    [SerializeField] private float _enemySpawnDelay = 1.5f;
 
     [Header("Spawn Boundaries")]
     [SerializeField] private float _spawnRangeX = 17f;
     [SerializeField] private float _spawnRangeZ = 9f;
     [SerializeField] private float _enemySpawnZ = 18f;
 
+    [Header("Game Over Settings")]
+    [SerializeField] private float _gameOverDelay = 2f;
+
     public bool isGameActive = true;
+    public int Score { get; private set; } = 0;
 
     private void Awake()
     {
@@ -33,8 +38,23 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Score = 0;
+        if (MainUIHandler.Instance != null)
+        {
+            MainUIHandler.Instance.UpdateScore(Score);
+        }
         StartCoroutine(SpawnPowerupRoutine());
         StartCoroutine(SpawnEnemyRoutine());
+    }
+
+    public void AddScore(int points)
+    {
+        if (!isGameActive) return;
+        Score += points;
+        if (MainUIHandler.Instance != null)
+        {
+            MainUIHandler.Instance.UpdateScore(Score);
+        }
     }
 
     IEnumerator SpawnPowerupRoutine()
@@ -65,6 +85,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator GameOverRoutine()
+    {
+        MainUIHandler.Instance.HideGameUI();
+        yield return new WaitForSeconds(_gameOverDelay);
+        if (MainUIHandler.Instance != null)
+        {
+            MainUIHandler.Instance.ShowGameOverScreen(Score);
+        }
+
+    }
+
     private Vector3 RandomPowerupPos()
     {
         float randomX = Random.Range(-_spawnRangeX, _spawnRangeX);
@@ -75,5 +106,13 @@ public class GameManager : MonoBehaviour
     {
         float randomX = Random.Range(-_spawnRangeX, _spawnRangeX);
         return new Vector3(randomX, 0.5f, _enemySpawnZ);
+    }
+    public void TriggerGameOver()
+    {
+        if (!isGameActive) return;
+
+        isGameActive = false;
+        StopAllCoroutines();
+        StartCoroutine(GameOverRoutine());
     }
 }
