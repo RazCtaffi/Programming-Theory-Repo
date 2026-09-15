@@ -514,6 +514,7 @@ MonoBehaviour:
   - {fileID: 3618923183221284800, guid: ccf9c75febfbd434e9464900e6ad10a1, type: 3}
   _enemyPrefabs:
   - {fileID: 5675296153232615093, guid: 3d30f12bf8495cb4e9706ed02a84aad1, type: 3}
+  - {fileID: 2394384658421836936, guid: 8922fd3988cb4fe4cb5923bede77cb0f, type: 3}
   _powerupSpawnMin: 3
   _powerupSpawnMax: 8
   _enemySpawnDelay: 2
