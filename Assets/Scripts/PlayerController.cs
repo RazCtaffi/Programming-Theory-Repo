@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     private int _speedBoostCount = 0;
     private int _rapidFireCount = 0;
     private int _spreadShotCount = 0;
+    private GameManager _gameManager;
 
     private void Start()
     {
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
         {
             SetColor(MainManager.Instance.ChosenColor);
         }
+        _gameManager = GameManager.Instance;
     }
 
     private void Awake()
@@ -149,6 +151,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void GameOver()
+    {
+        Destroy(gameObject);
+        _gameManager.isGameActive = false;
+    }
     public void ApplySpeedBoost(float boostAmount)
     {
         _speedBoostCount++;

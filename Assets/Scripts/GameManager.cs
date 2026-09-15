@@ -10,14 +10,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] _enemyPrefabs;
 
     [Header("Spawn Timing")]
-    [SerializeField] private float _powerupSpawnMin = 5f;
-    [SerializeField] private float _powerupSpawnMax = 10f;
-    [SerializeField] private float _enemySpawnDelay = 1f;
+    [SerializeField] private float _powerupSpawnMin = 3f;
+    [SerializeField] private float _powerupSpawnMax = 8f;
+    [SerializeField] private float _enemySpawnDelay = 2f;
 
     [Header("Spawn Boundaries")]
     [SerializeField] private float _spawnRangeX = 17f;
     [SerializeField] private float _spawnRangeZ = 9f;
-    [SerializeField] private float _enemySpawnZ = 10f;
+    [SerializeField] private float _enemySpawnZ = 15f;
 
     public bool isGameActive = true;
 

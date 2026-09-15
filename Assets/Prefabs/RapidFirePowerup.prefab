@@ -82,5 +82,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RapidFirePowerup
   _rotationSpeed: 100
-  _duration: 5
-  _newFireRate: 0.25
+  _effectDuration: 5
+  _despawnTime: 5
+  _newFireRate: 0.2
