@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     [Header("Spawn Boundaries")]
     [SerializeField] private float _spawnRangeX = 17f;
     [SerializeField] private float _spawnRangeZ = 9f;
-    [SerializeField] private float _enemySpawnZ = 15f;
+    [SerializeField] private float _enemySpawnZ = 18f;
 
     public bool isGameActive = true;
 

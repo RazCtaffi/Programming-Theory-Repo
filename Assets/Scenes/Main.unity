@@ -395,7 +395,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 3, z: 3}
+  m_LocalScale: {x: 4.5, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -513,7 +513,7 @@ MonoBehaviour:
   - {fileID: 5403266738252186079, guid: 594d058213d908a4e804061c7d7e2aa7, type: 3}
   - {fileID: 3618923183221284800, guid: ccf9c75febfbd434e9464900e6ad10a1, type: 3}
   _enemyPrefabs:
-  - {fileID: 1323945896327166147, guid: edaafbe3d3efbe749bbc88de95b434ac, type: 3}
+  - {fileID: 5675296153232615093, guid: 3d30f12bf8495cb4e9706ed02a84aad1, type: 3}
   _powerupSpawnMin: 3
   _powerupSpawnMax: 8
   _enemySpawnDelay: 2
