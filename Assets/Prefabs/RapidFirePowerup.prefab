@@ -84,4 +84,4 @@ MonoBehaviour:
   _rotationSpeed: 100
   _effectDuration: 5
   _despawnTime: 5
-  _newFireRate: 0.2
+  _newFireRate: 0.15

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//Inheritance
 public class ZigZagEnemy : Enemy
 {
     [Header("Zig-Zag Settings")]
@@ -8,11 +9,14 @@ public class ZigZagEnemy : Enemy
 
     private float _offset;
 
+    //Polymorphism
     protected override void Awake()
     {
         base.Awake();
         _offset = Random.Range(0f, 2f * Mathf.PI);
     }
+
+    //Polymorphism
     protected override void Move()
     {
         float horizontalWave = Mathf.Sin((Time.time+ _offset) * _frequency) * _amplitude;

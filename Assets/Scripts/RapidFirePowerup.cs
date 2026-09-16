@@ -3,7 +3,7 @@ using UnityEngine;
 public class RapidFirePowerup : Powerup
 {
     [Header("Fire Settings")]
-    [SerializeField, Range(0.05f, 0.75f)] private float _newFireRate = 0.2f;
+    [SerializeField, Range(0.05f, 0.75f)] private float _newFireRate = 0.15f;
     private float NewFireRate
     {
         get {  return _newFireRate; }
